@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Auto Cert
-        uses: neobaran/csac-action@v1
+        uses: neobaran/csac-action@v1.0.0
         with:
           # csac vesion https://github.com/neobaran/csac/releases
           version: latest # or 0.0.2
