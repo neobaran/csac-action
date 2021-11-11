@@ -1,0 +1,25 @@
+name: 'CSAC Action'
+description: 'GitHub Action for CSAC (Cloud Service Auto Cert)'
+author: 'neobaran'
+branding:
+  color: 'green'
+  icon: 'package'
+
+inputs:
+  tencent-secret-id:
+    description: 'Your Tencent Cloud Secret ID'
+    required: true
+  tencent-secret-key:
+    description: 'Your Tencent Cloud Secret Key'
+    required: true
+  domains:
+    description: 'List of your domains'
+    required: true
+  ttl:
+    description: 'DNS TTL'
+    required: false
+    default: 600
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

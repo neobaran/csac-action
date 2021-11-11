@@ -1,0 +1,36 @@
+{
+  "name": "csac-action",
+  "description": "GitHub Action for CSAC (Cloud Service Auto Cert)",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc && ncc build",
+    "format": "prettier --write **/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neobaran/csac-action.git"
+  },
+  "keywords": [
+    "actions",
+    "csac",
+    "https",
+    "ssl"
+  ],
+  "author": "neobaran",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0",
+    "@actions/http-client": "^1.0.11",
+    "@actions/tool-cache": "^1.7.1",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@octokit/webhooks-types": "^4.14.0",
+    "@types/js-yaml": "^4.0.4",
+    "@types/node": "^16.11.7",
+    "@vercel/ncc": "^0.31.1",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
+  }
+}
