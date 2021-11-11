@@ -1,10 +1,23 @@
-import * as git from './git';
 import * as core from '@actions/core';
-import {dump} from 'js-yaml';
-import {install} from './installer';
+import { dump } from 'js-yaml';
+import { install } from './installer';
 import * as path from 'path';
 import * as fs from 'fs';
-import {exec} from '@actions/exec';
+import { exec, getExecOutput } from '@actions/exec';
+
+async function getEmail() {
+  return await
+    getExecOutput('git', ['--no-pager', 'log', `--format=format:'%ae'`, '-n', '1'], {
+      ignoreReturnCode: true,
+      silent: true
+    })
+      .then(res => {
+        if (res.stderr.length > 0 && res.exitCode != 0) {
+          throw new Error(res.stderr);
+        }
+        return res.stdout.trim().replace(/'/g, '');
+      });
+}
 
 async function run() {
   try {
@@ -18,7 +31,7 @@ async function run() {
     if (!tencentSecretID || !tencentSecretKey) {
       throw new Error('No tencent secret id or key specified');
     }
-    const email = await git.getEmail();
+    const email = await getEmail();
 
     const config = dump({
       Email: email,
@@ -33,12 +46,13 @@ async function run() {
     const version = core.getInput('version') || 'latest';
 
     const csac = await install(version);
-    core.info(`csac v${version} installed successfully`);
+    core.info(`csac ${version} installed successfully`);
 
-    fs.writeFileSync(path.resolve(path.dirname(csac), 'config.yaml'), config);
-    core.info(`create config file successfully`);
+    const configPath = path.resolve(path.dirname(csac), 'config.yaml')
+    fs.writeFileSync(configPath, config);
+    core.info(`create config file on ${configPath}`);
 
-    await exec(csac, ['--config', 'config.yaml']);
+    await exec(csac, ['--config', configPath]);
   } catch (e) {
     const error = e as Error;
     core.setFailed(error.message);

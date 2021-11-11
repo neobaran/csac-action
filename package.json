@@ -4,7 +4,8 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc && ncc build",
-    "format": "prettier --write **/*.ts"
+    "format": "prettier --write **/*.ts",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "@types/node": "^16.11.7",
     "@vercel/ncc": "^0.31.1",
     "prettier": "^2.4.1",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "husky": "^7.0.4"
   }
 }

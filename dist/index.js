@@ -1,65 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3374:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getEmail = void 0;
-const exec = __importStar(__nccwpck_require__(1514));
-const git = (args = []) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield exec
-        .getExecOutput(`git`, args, {
-        ignoreReturnCode: true,
-        silent: true
-    })
-        .then(res => {
-        if (res.stderr.length > 0 && res.exitCode != 0) {
-            throw new Error(res.stderr);
-        }
-        return res.stdout.trim();
-    });
-});
-function getEmail() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield git(['--no-pager', 'log', `--format=format:'%ae'`, '-n', '1']);
-    });
-}
-exports.getEmail = getEmail;
-//# sourceMappingURL=git.js.map
-
-/***/ }),
-
 /***/ 1480:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -109,7 +50,7 @@ function install(version) {
             url += `tags/v${version}`;
         }
         core.info(`Fetching release from ${url}`);
-        const res = yield (yield new httpm.HttpClient('actions/install-csac').getJson(url)).result;
+        const res = (yield (yield new httpm.HttpClient('actions/install-csac').getJson(url)).result);
         const asset = res.assets.find(item => item.name.includes('Linux_x86_64.tar.gz'));
         if (!asset) {
             throw new Error('No asset found');
@@ -165,13 +106,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const git = __importStar(__nccwpck_require__(3374));
 const core = __importStar(__nccwpck_require__(2186));
 const js_yaml_1 = __nccwpck_require__(1917);
 const installer_1 = __nccwpck_require__(1480);
 const path = __importStar(__nccwpck_require__(5622));
 const fs = __importStar(__nccwpck_require__(5747));
 const exec_1 = __nccwpck_require__(1514);
+function getEmail() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield (0, exec_1.getExecOutput)('git', ['--no-pager', 'log', `--format=format:'%ae'`, '-n', '1'], {
+            ignoreReturnCode: true,
+            silent: true
+        })
+            .then(res => {
+            if (res.stderr.length > 0 && res.exitCode != 0) {
+                throw new Error(res.stderr);
+            }
+            return res.stdout.trim().replace(/'/g, '');
+        });
+    });
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -185,7 +139,7 @@ function run() {
             if (!tencentSecretID || !tencentSecretKey) {
                 throw new Error('No tencent secret id or key specified');
             }
-            const email = yield git.getEmail();
+            const email = yield getEmail();
             const config = (0, js_yaml_1.dump)({
                 Email: email,
                 Tencent: {
@@ -193,14 +147,15 @@ function run() {
                     SecretKey: tencentSecretKey
                 },
                 Domains: domains,
-                TTL: +ttl,
+                TTL: +ttl
             });
             const version = core.getInput('version') || 'latest';
             const csac = yield (0, installer_1.install)(version);
-            core.info(`csac v${version} installed successfully`);
-            fs.writeFileSync(path.resolve(path.dirname(csac), 'config.yaml'), config);
-            core.info(`create config file successfully`);
-            yield (0, exec_1.exec)(csac, ['--config', 'config.yaml']);
+            core.info(`csac ${version} installed successfully`);
+            const configPath = path.resolve(path.dirname(csac), 'config.yaml');
+            fs.writeFileSync(configPath, config);
+            core.info(`create config file on ${configPath}`);
+            yield (0, exec_1.exec)(csac, ['--config', configPath]);
         }
         catch (e) {
             const error = e;
@@ -213,7 +168,7 @@ run();
 
 /***/ }),
 
-/***/ 5241:
+/***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -347,7 +302,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(5241);
+const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
 const os = __importStar(__nccwpck_require__(2087));
@@ -960,7 +915,7 @@ const os = __importStar(__nccwpck_require__(2087));
 const events = __importStar(__nccwpck_require__(8614));
 const child = __importStar(__nccwpck_require__(3129));
 const path = __importStar(__nccwpck_require__(5622));
-const io = __importStar(__nccwpck_require__(7351));
+const io = __importStar(__nccwpck_require__(7436));
 const ioUtil = __importStar(__nccwpck_require__(1962));
 const timers_1 = __nccwpck_require__(8213);
 /* eslint-disable @typescript-eslint/unbound-method */
@@ -2406,7 +2361,7 @@ exports.getCmdPath = getCmdPath;
 
 /***/ }),
 
-/***/ 7351:
+/***/ 7436:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -3018,7 +2973,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.evaluateVersions = exports.isExplicitVersion = exports.findFromManifest = exports.getManifestFromRepo = exports.findAllVersions = exports.find = exports.cacheFile = exports.cacheDir = exports.extractZip = exports.extractXar = exports.extractTar = exports.extract7z = exports.downloadTool = exports.HTTPError = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const io = __importStar(__nccwpck_require__(7351));
+const io = __importStar(__nccwpck_require__(7436));
 const fs = __importStar(__nccwpck_require__(5747));
 const mm = __importStar(__nccwpck_require__(2473));
 const os = __importStar(__nccwpck_require__(2087));

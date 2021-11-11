@@ -1,0 +1,21 @@
+name: csac-action-test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  csac:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Auto Cert
+        uses: neobaran/csac-action@4f5cd181f4f94c8a8843e932dbaa2f0e13bdda09
+        with:
+          version: latest
+          tencent-secret-id: ${{ secrets.TENCENT_SECRET_ID }}
+          tencent-secret-key: ${{ secrets.TENCENT_SECRET_KEY }}
+          domains: |
+            test.neobaran.com
