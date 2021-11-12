@@ -31,7 +31,7 @@ async function run() {
     if (!tencentSecretID || !tencentSecretKey) {
       throw new Error('No tencent secret id or key specified');
     }
-    const email = await getEmail();
+    const email = core.getInput('email') || await getEmail();
 
     const config = dump({
       Email: email,
@@ -52,7 +52,11 @@ async function run() {
     fs.writeFileSync(configPath, config);
     core.info(`create config file on ${configPath}`);
 
-    await exec(csac, ['--config', configPath]);
+    const args = ['--config', configPath]
+    if (core.getBooleanInput('debug') === true) {
+      args.push('--debug');
+    }
+    await exec(csac, args);
   } catch (e) {
     const error = e as Error;
     core.setFailed(error.message);

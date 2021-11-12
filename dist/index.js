@@ -139,7 +139,7 @@ function run() {
             if (!tencentSecretID || !tencentSecretKey) {
                 throw new Error('No tencent secret id or key specified');
             }
-            const email = yield getEmail();
+            const email = core.getInput('email') || (yield getEmail());
             const config = (0, js_yaml_1.dump)({
                 Email: email,
                 Tencent: {
@@ -155,7 +155,11 @@ function run() {
             const configPath = path.resolve(path.dirname(csac), 'config.yaml');
             fs.writeFileSync(configPath, config);
             core.info(`create config file on ${configPath}`);
-            yield (0, exec_1.exec)(csac, ['--config', configPath]);
+            const args = ['--config', configPath];
+            if (core.getBooleanInput('debug') === true) {
+                args.push('--debug');
+            }
+            yield (0, exec_1.exec)(csac, args);
         }
         catch (e) {
             const error = e;

@@ -12,8 +12,9 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Auto Cert
-        uses: neobaran/csac-action@v1.0.0
+        uses: neobaran/csac-action@v1.0.1
         with:
+          debug: true
           version: latest
           tencent-secret-id: ${{ secrets.TENCENT_SECRET_ID }}
           tencent-secret-key: ${{ secrets.TENCENT_SECRET_KEY }}
