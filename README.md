@@ -9,11 +9,18 @@
 ---
 ## Usage
 
+1. [Generate your Tencent Cloud API key](https://cloud.tencent.com/document/api/213/30654#.E7.94.B3.E8.AF.B7.E5.AE.89.E5.85.A8.E5.87.AD.E8.AF.81)
+
+2. [Add secret](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets#creating-encrypted-secrets-for-a-repository) called `TENCENT_SECRET_ID` and `TENCENT_SECRET_KEY` in your repo.
+
+3. creat new action
+
 ```yaml
 name: 'example.com'
 
 on:
   schedule:
+    # Runs every two months on the 1st
     - cron: '0 0 1 */2 *'
 
 jobs:
