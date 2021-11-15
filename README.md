@@ -35,6 +35,7 @@ jobs:
         with:
           # csac vesion https://github.com/neobaran/csac/releases
           version: latest # or 0.0.2
+          keytype: 'RSA2048' # or EC256 / EC384 / RSA4096 / RSA8192
           tencent-secret-id: ${{ secrets.TENCENT_SECRET_ID }}
           tencent-secret-key: ${{ secrets.TENCENT_SECRET_KEY }}
           domains: |
