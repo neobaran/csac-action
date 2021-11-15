@@ -21,6 +21,7 @@ async function getEmail() {
 
 async function run() {
   try {
+    const keyType = core.getInput('keytype') || 'RSA2048';
     const tencentSecretID = core.getInput('tencent-secret-id');
     const tencentSecretKey = core.getInput('tencent-secret-key');
     const domains = core.getMultilineInput('domains') || [];
@@ -34,6 +35,7 @@ async function run() {
     const email = core.getInput('email') || await getEmail();
 
     const config = dump({
+      KeyType: keyType,
       Email: email,
       Tencent: {
         SecretId: tencentSecretID,

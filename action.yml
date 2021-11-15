@@ -6,6 +6,14 @@ branding:
   icon: 'package'
 
 inputs:
+  version:
+    description: 'Version of CSAC'
+    required: false
+    default: 'latest'
+  keytype:
+    description: 'Cert Key Type'
+    required: false
+    default: 'RSA2048'
   tencent-secret-id:
     description: 'Your Tencent Cloud Secret ID'
     required: true

@@ -129,6 +129,7 @@ function getEmail() {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const keyType = core.getInput('keytype') || 'RSA2048';
             const tencentSecretID = core.getInput('tencent-secret-id');
             const tencentSecretKey = core.getInput('tencent-secret-key');
             const domains = core.getMultilineInput('domains') || [];
@@ -141,6 +142,7 @@ function run() {
             }
             const email = core.getInput('email') || (yield getEmail());
             const config = (0, js_yaml_1.dump)({
+                KeyType: keyType,
                 Email: email,
                 Tencent: {
                     SecretId: tencentSecretID,
