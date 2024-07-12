@@ -164,7 +164,7 @@ function run() {
             core.info(`csac ${version} installed successfully`);
             const configPath = path.resolve(path.dirname(csac), 'config.yaml');
             fs.writeFileSync(configPath, config);
-            core.info(`create config file on ${configPath}`);
+            core.info(`create config file on ${configPath}: \n\n ${config}`);
             const args = ['--config', configPath];
             if (core.getBooleanInput('debug') === true) {
                 args.push('--debug');
